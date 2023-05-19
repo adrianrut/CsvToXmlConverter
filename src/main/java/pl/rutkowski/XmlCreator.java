@@ -17,6 +17,7 @@ public class XmlCreator {
 
     private final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
+
     public void saveXmlFile(Document doc, String fileName) {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer;
@@ -28,7 +29,8 @@ public class XmlCreator {
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         DOMSource source = new DOMSource(doc);
         String fileNameXml = fileName.replace(".csv", ".xml");
-        StreamResult file = new StreamResult(new File("/Users/adrian/Desktop/Xml/" + fileNameXml));
+        String xmlPath = "/Users/adrian/Desktop/Xml/" + fileNameXml;
+        StreamResult file = new StreamResult(new File(xmlPath));
         try {
             transformer.transform(source, file);
         } catch (TransformerException ex) {
