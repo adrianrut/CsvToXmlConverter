@@ -12,39 +12,45 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class XmlCreator {
 
-    private final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    private final DocumentBuilderFactory dbFactory;
+
+    public XmlCreator() {
+        this.dbFactory = DocumentBuilderFactory.newInstance();
+    }
 
 
-    public void saveXmlFile(Document doc, String fileName) {
+    public void saveXmlFile(Document doc, String fileName, String directory) {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer;
         try {
             transformer = transformerFactory.newTransformer();
-        } catch (TransformerConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        DOMSource source = new DOMSource(doc);
-        String fileNameXml = fileName.replace(".csv", ".xml");
-        String xmlPath = "/Users/adrian/Desktop/Xml/" + fileNameXml;
-        StreamResult file = new StreamResult(new File(xmlPath));
-        try {
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            String fileNameXml = fileName.replace(".csv", ".xml");
+            String xmlPath = directory + fileNameXml;
+            StreamResult file = new StreamResult(new File(xmlPath));
             transformer.transform(source, file);
-        } catch (TransformerException ex) {
-            throw new RuntimeException(ex);
+        } catch (TransformerException e) {
+            System.err.println("Exception caught. Terminating JVM.");
+            System.exit(0);
+        } finally {
+            System.err.println("Exiting the program");
         }
+            
     }
 
     public Document createXml(List<Book> bookList) {
-        DocumentBuilder dBuilder;
+        DocumentBuilder dBuilder = null;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
-            throw new RuntimeException(ex);
+            System.err.println("Exception caught. Terminating JVM.");
+            System.exit(0);
+        } finally {
+            System.err.println("Exiting the program");
         }
         Document doc = dBuilder.newDocument();
         Element rootElement = doc.createElement("Books");

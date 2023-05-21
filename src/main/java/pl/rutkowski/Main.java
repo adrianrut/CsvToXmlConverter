@@ -7,15 +7,18 @@ import java.util.TimerTask;
 public class Main {
     public static void main(String[] args) {
 
+        String csvPath = "/Users/adrian/Desktop/Csv";
+        String xmlPath = "/Users/adrian/Desktop/Xml/";
+
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 FileManager fileManager = new FileManager();
                 try {
-                    fileManager.convertFromCsvToXml();
+                    fileManager.convertFromCsvToXml(csvPath, xmlPath);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    timer.cancel();
                 }
             }
         };
