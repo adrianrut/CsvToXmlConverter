@@ -7,38 +7,36 @@ import java.util.*;
 
 public class FileManager {
 
-    private File csvFile;
-    private File[] matchingFile;
-    private String csvPath;
-
-    public FileManager(File csvFile, File[] matchingFile, String csvPath) {
-        this.csvFile = csvFile;
-        this.matchingFile = matchingFile;
-        this.csvPath = csvPath;
-    }
-
     private final XmlCreator xmlCreator = new XmlCreator();
     private final CsvReader csvReader = new CsvReader();
 
-    public FileManager() {
-
-    }
-
 
     public void convertFromCsvToXml() throws IOException {
-        csvPath = "/Users/adrian/Desktop/Csv";
-        csvFile = new File(csvPath);
-        matchingFile = csvFile.listFiles((dir, name) -> name.endsWith("csv"));
+        String csvPath = "/Users/adrian/Desktop/Csv";
+        String xmlPath = "/Users/adrian/Desktop/Xml/";
+        List<String> listOfXml = getXmlFilesFromDirectory(xmlPath);
+        File csvFile = new File(csvPath);
+        File[] matchingFile = csvFile.listFiles((dir, name) -> name.endsWith("csv"));
         List<String> filesList = new ArrayList<>();
         assert matchingFile != null;
-        boolean ifFileExist = checkIfFileExist(matchingFile, filesList);
-        if(!ifFileExist){
-            assert matchingFile != null;
-            for (File file : matchingFile) {
+        for (File file : matchingFile) {
+            if (!listOfXml.contains(file.getName())) {
                 List<Book> books = csvReader.readFile(file);
                 getBooks(filesList, books, file.getName());
             }
         }
+
+    }
+
+    private List<String> getXmlFilesFromDirectory(String xmlPath) {
+        File folder = new File(xmlPath);
+        File[] listOfFiles = folder.listFiles();
+        List<String> listOfXml = new ArrayList<>();
+        assert listOfFiles != null;
+        for (File listOfFile : listOfFiles) {
+            listOfXml.add(listOfFile.getName().replace("xml", "csv"));
+        }
+        return listOfXml;
     }
 
     private void getBooks(List<String> filesList, List<Book> books, String fileName) {
@@ -47,14 +45,5 @@ public class FileManager {
         filesList.add(fileName);
     }
 
-    private boolean checkIfFileExist(File[] matchingFile, List<String> filesList) {
-        assert matchingFile != null;
-        for (File file : matchingFile) {
-            if(filesList.contains(file.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }
