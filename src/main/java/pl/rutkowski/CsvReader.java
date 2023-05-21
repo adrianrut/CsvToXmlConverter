@@ -18,7 +18,8 @@ public class CsvReader {
                 if (isValid(split)) {
                     bookList.add(new Book(split[0].trim(), split[1].trim(), split[2].trim(), split[3].trim()));
                 } else {
-                    throw new RuntimeException("Incorrect book format");
+                    System.err.println("Exception caught. Incorrect book format");
+                    System.exit(0);
                 }
             }
         }

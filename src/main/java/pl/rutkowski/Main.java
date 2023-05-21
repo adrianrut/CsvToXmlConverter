@@ -18,7 +18,8 @@ public class Main {
                 try {
                     fileManager.convertFromCsvToXml(csvPath, xmlPath);
                 } catch (IOException e) {
-                    timer.cancel();
+                    System.err.println("Exception caught. Terminating JVM.");
+                    System.exit(0);
                 }
             }
         };
